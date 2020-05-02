@@ -18,9 +18,9 @@ public class EmployeeService {
         return employeeDao.getAllEmployee();
     }
 
-    public Boolean login(Integer id, String psw){
+    public Boolean login(Integer id, String psw) {
         Employee e = employeeDao.login(id);
-        if(e.getId() == id && e.getPassword().equals(psw))
+        if (e.getId() == id && e.getPassword().equals(psw))
             return true;
         return false;
     }

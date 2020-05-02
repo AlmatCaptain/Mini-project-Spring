@@ -11,6 +11,6 @@ public class ReserveRoomHandler implements ApplicationListener<ReserveRoomEvent>
     public void onApplicationEvent(ReserveRoomEvent reserveRoomEvent) {
         ReservedRooms r = reserveRoomEvent.getReservedRooms();
         System.out.println("Room " + r.getRoomNumber() + " reserve by "
-                + r.getEmployeeId() + " from " + r.getDate()+" to " +r.getToDate());
+                + r.getEmployeeId() + " from " + r.getDate() + " to " + r.getToDate());
     }
 }

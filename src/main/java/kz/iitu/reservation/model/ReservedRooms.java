@@ -9,7 +9,7 @@ public class ReservedRooms {
     private Timestamp date;
     private Timestamp toDate;
 
-    public ReservedRooms(int employeeId, String roomNumber, Timestamp date,Timestamp toDate) {
+    public ReservedRooms(int employeeId, String roomNumber, Timestamp date, Timestamp toDate) {
         this.employeeId = employeeId;
         this.roomNumber = roomNumber;
         this.date = date;

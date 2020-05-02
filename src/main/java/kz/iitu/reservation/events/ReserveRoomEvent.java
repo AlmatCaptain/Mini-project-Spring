@@ -3,7 +3,7 @@ package kz.iitu.reservation.events;
 import kz.iitu.reservation.model.ReservedRooms;
 import org.springframework.context.ApplicationEvent;
 
-public class ReserveRoomEvent  extends ApplicationEvent  {
+public class ReserveRoomEvent extends ApplicationEvent {
 
     private ReservedRooms reservedRooms;
 

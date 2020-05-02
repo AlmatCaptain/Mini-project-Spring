@@ -18,20 +18,20 @@ public class EmployeeDao {
         return jdbcTemplate.query("select * from employee", new EmployeeMapper());
     }
 
-    public Employee login(Integer id){
-        Boolean empty = jdbcTemplate.query("select * from employee where id='"+id+"'",new EmployeeMapper()).isEmpty();
-        if(!empty)
-            return jdbcTemplate.query("select * from employee where id='"+id+"'",new EmployeeMapper()).get(0);
+    public Employee login(Integer id) {
+        Boolean empty = jdbcTemplate.query("select * from employee where id='" + id + "'", new EmployeeMapper()).isEmpty();
+        if (!empty)
+            return jdbcTemplate.query("select * from employee where id='" + id + "'", new EmployeeMapper()).get(0);
         return null;
     }
 
-    public void addEmployee(Employee e){
-        String query = "insert into employee(id,name,password) values ('"+e.getId()+"','"+e.getName()+"','"+e.getPassword()+"')";
+    public void addEmployee(Employee e) {
+        String query = "insert into employee(id,name,password) values ('" + e.getId() + "','" + e.getName() + "','" + e.getPassword() + "')";
         jdbcTemplate.execute(query);
     }
 
-    public void deleteEmployeeById(Integer id){
-        String query = "delete from employee where id='"+id+"'";
+    public void deleteEmployeeById(Integer id) {
+        String query = "delete from employee where id='" + id + "'";
 
         jdbcTemplate.execute(query);
     }

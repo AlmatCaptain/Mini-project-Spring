@@ -9,7 +9,7 @@ public class RemoveReserveEvent extends ApplicationEvent {
 
     public RemoveReserveEvent(Object source, ReservedRooms reservedRooms) {
         super(source);
-        this.reservedRooms=reservedRooms;
+        this.reservedRooms = reservedRooms;
     }
 
     public ReservedRooms getReservedRooms() {

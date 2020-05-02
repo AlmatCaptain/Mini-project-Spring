@@ -79,10 +79,10 @@ public class Application {
                                     }
 
                                     int rem = scanner.nextInt();
-                                    reserveController.removeReserve(reserveController.getReservesById(id).get(rem-1));
+                                    reserveController.removeReserve(reserveController.getReservesById(id).get(rem - 1));
                                     break;
                                 case 3:
-                                    for(ReservedRooms r: reserveController.getReservesById(id)){
+                                    for (ReservedRooms r : reserveController.getReservesById(id)) {
                                         System.out.println(r);
                                     }
                             }

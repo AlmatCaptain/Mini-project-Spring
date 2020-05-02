@@ -18,4 +18,5 @@ public class ReservedMapper implements RowMapper<ReservedRooms> {
                 resultSet.getTimestamp("date"),
                 resultSet.getTimestamp("todate")
         );
-    }}
+    }
+}
