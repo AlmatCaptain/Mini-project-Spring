@@ -1,46 +1,70 @@
 package kz.iitu.reservation.model;
 
-public class Employee {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-    private Integer id;
-    private String name;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.List;
+
+@Entity
+@ToString
+@Setter
+@Getter
+@NoArgsConstructor
+public class Employee implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String username;
     private String password;
 
-    public Employee(Integer id, String name, String password) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-    }
 
-    public Integer getId() {
-        return id;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
+    private List<ReservedRooms> reservedRooms;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "employee_roles",
+            joinColumns = {@JoinColumn(name = "employee_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
+    )
+    private List<Role> roles;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
     }
 
     @Override
-    public String toString() {
-        return "Employee{" +
-                "name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

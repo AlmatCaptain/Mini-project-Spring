@@ -1,6 +1,5 @@
 package kz.iitu.reservation.events.handler;
 
-import kz.iitu.reservation.events.RemoveReserveEvent;
 import kz.iitu.reservation.events.ReserveRoomEvent;
 import kz.iitu.reservation.model.ReservedRooms;
 import org.springframework.context.ApplicationListener;

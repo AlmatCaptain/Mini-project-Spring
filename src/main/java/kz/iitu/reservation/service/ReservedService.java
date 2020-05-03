@@ -1,55 +1,60 @@
 package kz.iitu.reservation.service;
 
-import kz.iitu.reservation.dao.ReservedRoomDao;
 import kz.iitu.reservation.events.RemoveReserveEvent;
 import kz.iitu.reservation.events.ReserveRoomEvent;
 import kz.iitu.reservation.model.ReservedRooms;
+import kz.iitu.reservation.repository.ReservedRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 public class ReservedService implements ApplicationEventPublisherAware {
 
-    @Autowired
-    public ReservedRoomDao reservedRoomDao;
+    private final ReservedRoomRepository reservedRepository;
     private ApplicationEventPublisher eventPublisher;
 
+    @Autowired
+    public ReservedService(ReservedRoomRepository reservedRepository) {
+        this.reservedRepository = reservedRepository;
+    }
+
     public List<ReservedRooms> getAllResRoom() {
-        for (ReservedRooms r : reservedRoomDao.getAllReservedRoom())
-            System.out.println(r);
-        return reservedRoomDao.getAllReservedRoom();
+        return reservedRepository.findAll();
     }
 
     public void addReserve(ReservedRooms reserve) {
         if (!getAllResRoom().contains(reserve)) {
-            reservedRoomDao.addReserve(reserve);
+            reservedRepository.saveAndFlush(reserve);
             this.eventPublisher.publishEvent(new ReserveRoomEvent(this, reserve));
         }
-
     }
 
     public void removeReserve(ReservedRooms reserve) {
-        reservedRoomDao.removeReserve(reserve);
+        reservedRepository.delete(reserve);
         this.eventPublisher.publishEvent(new RemoveReserveEvent(this, reserve));
     }
 
-    public List<ReservedRooms> getReservesById(Integer id) {
-        List<ReservedRooms> list = new ArrayList<>();
+    public ReservedRooms getReservesById(Long id) {
+        return reservedRepository.findById(id)
+                                 .get();
+    }
 
-        for (ReservedRooms r : getAllResRoom()) {
-            if (r.getEmployeeId() == id)
-                list.add(r);
+    public void updateReserve(Long id, ReservedRooms reserve) {
+        ReservedRooms room = reservedRepository.findById(id)
+                                               .orElse(null);
+
+        if (room != null) {
+            room.setEmployeeId(reserve.getEmployeeId());
+            room.setRoomNumber(reserve.getRoomNumber());
+            room.setDate(reserve.getDate());
+            room.setToDate(reserve.getToDate());
+
+            reservedRepository.saveAndFlush(room);
         }
-
-        for (ReservedRooms r : list)
-            System.out.println(r);
-
-        return list;
     }
 
     @Override

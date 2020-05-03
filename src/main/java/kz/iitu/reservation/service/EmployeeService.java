@@ -1,42 +1,72 @@
 package kz.iitu.reservation.service;
 
-import kz.iitu.reservation.dao.EmployeeDao;
 import kz.iitu.reservation.model.Employee;
+import kz.iitu.reservation.repository.EmployeeRepository;
+import kz.iitu.reservation.repository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
-public class EmployeeService {
+@Service
+public class EmployeeService implements UserDetailsService {
+
+    private final EmployeeRepository employeeRepository;
+    private final RolesRepository rolesRepository;
 
     @Autowired
-    public EmployeeDao employeeDao;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public List<Employee> getListEmployee() {
-        return employeeDao.getAllEmployee();
+    @Autowired
+    public EmployeeService(EmployeeRepository employeeRepository, RolesRepository rolesRepository) {
+        this.employeeRepository = employeeRepository;
+        this.rolesRepository = rolesRepository;
     }
 
-    public Boolean login(Integer id, String psw) {
-        Employee e = employeeDao.login(id);
-        if (e.getId() == id && e.getPassword().equals(psw))
-            return true;
-        return false;
+    public List<Employee> getListEmployee() {
+        return employeeRepository.findAll();
     }
 
     public void addEmployee(Employee e) {
-        if (!getListEmployee().contains(e))
-            employeeDao.addEmployee(e);
+        e.setPassword(passwordEncoder.encode(e.getPassword()));
+        employeeRepository.saveAndFlush(e);
     }
 
-    public void deleteEmployee(Employee e, Integer id) {
-        if (employeeDao.getAllEmployee().contains(e)) {
-            employeeDao.deleteEmployeeById(id);
-        } else
-            System.out.println("User not find");
+    public void updateEmployee(Long id, Employee employee) {
+        Employee e = employeeRepository.findById(id)
+                                       .orElse(null);
 
+        if (e != null) {
+            e.setUsername(employee.getUsername());
+            e.setPassword(employee.getPassword());
+
+            employeeRepository.saveAndFlush(e);
+        }
+    }
+
+    public void updateName(Long id, String name) {
+        Employee employee = employeeRepository.findById(id)
+                                              .get();
+        employee.setUsername(name);
+        employeeRepository.saveAndFlush(employee);
+    }
+
+    public void deleteEmployee(Long id) {
+        employeeRepository.deleteById(id);
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        Employee employee = employeeRepository.findByUsername(s);
+
+        if (employee == null) {
+            throw new UsernameNotFoundException("Member: " + s + " not found!");
+        }
+        return employee;
+    }
 }
