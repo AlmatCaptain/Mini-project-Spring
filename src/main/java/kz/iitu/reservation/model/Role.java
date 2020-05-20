@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "employees")
 public class Role implements GrantedAuthority {
 
     @Id

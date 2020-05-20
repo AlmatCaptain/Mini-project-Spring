@@ -75,5 +75,9 @@ public class JwtTokenGeneratorFilter extends UsernamePasswordAuthenticationFilte
 
         // Add token to header
         response.addHeader("Authorization", "Bearer " + token);
+        response.getWriter().write(token);
+        response.getWriter().flush();
+        response.getWriter().close();
+
     }
 }

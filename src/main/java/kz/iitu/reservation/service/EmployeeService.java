@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -32,6 +34,7 @@ public class EmployeeService implements UserDetailsService {
     }
 
     public void addEmployee(Employee e) {
+        e.setRoles(Collections.singletonList(rolesRepository.getOne(2L)));
         e.setPassword(passwordEncoder.encode(e.getPassword()));
         employeeRepository.saveAndFlush(e);
     }
@@ -59,6 +62,24 @@ public class EmployeeService implements UserDetailsService {
         employeeRepository.deleteById(id);
     }
 
+    public void updateRole(Long id, String role) {
+        Employee employee = employeeRepository.findById(id)
+                                              .get();
+
+        Employee e = new Employee();
+        e.setId(employee.getId());
+        e.setUsername(employee.getUsername());
+        e.setPassword(employee.getPassword());
+        e.setReservedRooms(employee.getReservedRooms());
+
+        if (role.equals("ADMIN"))
+            e.setRoles(Collections.singletonList(rolesRepository.getOne(2L)));
+        else if (role.equals("USER")) {
+            e.setRoles(Collections.singletonList(rolesRepository.getOne(1L)));
+        }
+
+        employeeRepository.save(e);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {

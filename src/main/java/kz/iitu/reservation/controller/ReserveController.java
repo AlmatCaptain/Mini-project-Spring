@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/reserves")
 public class ReserveController {
@@ -28,9 +29,9 @@ public class ReserveController {
         reservedService.addReserve(reserve);
     }
 
-    @DeleteMapping("/delete")
-    public void removeReserve(@RequestBody ReservedRooms reserve) {
-        reservedService.removeReserve(reserve);
+    @DeleteMapping("/delete/{id}")
+    public void removeReserve(@PathVariable Long id) {
+        reservedService.removeReserve(reservedService.getReservesById(id));
     }
 
     @PutMapping("/update/{id}")
@@ -39,9 +40,10 @@ public class ReserveController {
         reservedService.updateReserve(id, reserve);
     }
 
-    @GetMapping("/{id}")
-    public ReservedRooms getReserveById(@PathVariable Long id) {
-        return reservedService.getReservesById(id);
+    @GetMapping("/{num}")
+    public List<ReservedRooms> getReserveById(@PathVariable String num) {
+        System.out.println("ReserveController.getReserveById" + reservedService.getReservesByRoom(num));
+        return reservedService.getReservesByRoom(num);
     }
 
 }

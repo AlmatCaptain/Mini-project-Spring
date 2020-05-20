@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
@@ -23,8 +23,11 @@ public class RoomController {
         return roomService.getAllRooms();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public void deleteRoom(@PathVariable String id) {
         roomService.deleteRoom(id);
     }
+
+    @PostMapping("/admin/add")
+    public void addRoom(@RequestBody Room room){roomService.addRoom(room);}
 }

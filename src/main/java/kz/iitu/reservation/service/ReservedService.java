@@ -47,7 +47,9 @@ public class ReservedService implements ApplicationEventPublisherAware {
         ReservedRooms room = reservedRepository.findById(id)
                                                .orElse(null);
 
+        System.out.println("ReservedService.updateReserve "+ room.getId());
         if (room != null) {
+            room.setId(id);
             room.setEmployeeId(reserve.getEmployeeId());
             room.setRoomNumber(reserve.getRoomNumber());
             room.setDate(reserve.getDate());
@@ -55,6 +57,10 @@ public class ReservedService implements ApplicationEventPublisherAware {
 
             reservedRepository.saveAndFlush(room);
         }
+    }
+
+    public List<ReservedRooms> getReservesByRoom(String num) {
+        return reservedRepository.findAllByRoomNumber(num);
     }
 
     @Override

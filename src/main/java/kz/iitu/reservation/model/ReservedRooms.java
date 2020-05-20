@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "employee")
 public class ReservedRooms {
 
     @Id

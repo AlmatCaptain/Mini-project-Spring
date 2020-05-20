@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@ToString
+@ToString(exclude = "roles")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -30,7 +30,7 @@ public class Employee implements UserDetails {
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
     private List<ReservedRooms> reservedRooms;
 
-    @JsonIgnore
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "employee_roles",
             joinColumns = {@JoinColumn(name = "employee_id", referencedColumnName = "id")},

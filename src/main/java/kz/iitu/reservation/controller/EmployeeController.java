@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -40,9 +41,20 @@ public class EmployeeController {
         employeeService.updateName(id, name);
     }
 
+    @PatchMapping("/admin/role/{id}")
+    public void updateUserRole(@PathVariable Long id, @RequestParam String role) {
+        employeeService.updateRole(id, role);
+    }
+
     @DeleteMapping("/admin/delete/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
     }
+
+    @PostMapping("/admin/add")
+    public void createEmployee(@RequestBody Employee e) {
+        employeeService.addEmployee(e);
+    }
+
 
 }

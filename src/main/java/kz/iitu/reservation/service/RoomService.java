@@ -25,4 +25,7 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
+    public void addRoom(Room room) {
+        roomRepository.saveAndFlush(room);
+    }
 }
